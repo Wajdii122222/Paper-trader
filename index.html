@@ -82,7 +82,9 @@ table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;p
 "use strict";
 const API = "https://api.binance.com/api/v3/klines";
 const SYMBOLS = ["BTCUSDT","ETHUSDT"];
-const START_BALANCE = 10000, FEE = 0.001, STOP = 0.01, TAKE = 0.02, RISK = 0.005, MAX_NOTIONAL = 0.10, DAILY_LIMIT = 0.02;
+const START_BALANCE = 50, FEE = 0.001, SLIPPAGE = 0.0005;
+const STOP = 0.01, TAKE = 0.02, RISK = 0.005;
+const MAX_NOTIONAL = 0.10, DAILY_LIMIT = 0.02;
 const KEY = "privatePaperTraderV2";
 const $ = id => document.getElementById(id);
 const money = n => (Number.isFinite(n) ? n : 0).toLocaleString("en-US",{style:"currency",currency:"USD"});
