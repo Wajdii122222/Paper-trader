@@ -2,146 +2,237 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#101827">
-<title>Paper Trader — Crypto</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Private Paper Trader</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1220;--panel:#131e30;--line:#27354b;--text:#edf3ff;--muted:#9caec8;--green:#4ade80;--red:#fb7185;--blue:#7dd3fc}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-header{padding:24px 18px 14px;background:#101827;border-bottom:1px solid var(--line)}h1{font-size:24px;margin:0 0 6px}p{margin:0;color:var(--muted);line-height:1.45}.wrap{max-width:760px;margin:auto;padding:14px;display:grid;gap:12px}
-.banner{padding:12px 14px;border:1px solid #725c2d;background:#302817;border-radius:12px;color:#ffe7a3;font-size:13px;line-height:1.4}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.muted{color:var(--muted);font-size:13px}.price{font-size:30px;font-weight:750;margin:8px 0}.green{color:var(--green)}.red{color:var(--red)}
-.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{background:#0d1727;padding:12px;border-radius:12px;min-width:0}.metric .v{font-size:20px;font-weight:700;margin-top:5px;overflow-wrap:anywhere}
-label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}select,button{font:inherit;border-radius:10px;padding:12px;border:1px solid var(--line);background:#0d1727;color:var(--text);width:100%}button{cursor:pointer;font-weight:650;background:#164e63;border-color:#0e7490}button.secondary{background:#18253a;border-color:var(--line)}button.danger{background:#4c1d2a;border-color:#9f1239}.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}.status{display:inline-flex;align-items:center;gap:7px;font-size:12px;border-radius:999px;padding:6px 9px;background:#173324;color:#a7f3c0}.dot{width:7px;height:7px;border-radius:50%;background:var(--green)}.log{display:grid;gap:9px}.trade{padding:10px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;font-size:13px}.trade:last-child{border-bottom:0}.trade strong{display:block;margin-bottom:3px}.empty{color:var(--muted);font-size:13px;padding:10px 0}.small{font-size:12px;color:var(--muted);line-height:1.5}footer{padding:8px 4px 24px;text-align:center;color:var(--muted);font-size:12px}
-@media(min-width:620px){.metrics{grid-template-columns:repeat(4,1fr)}}
+:root{color-scheme:dark;--bg:#0b1020;--panel:#141c2f;--line:#29344d;--muted:#9caac2;--text:#edf3ff;--green:#43d39e;--red:#ff7185;--blue:#83aaff;--amber:#ffd27a}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1020,#10182b);color:var(--text);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:1000px;margin:auto;padding:18px 14px 40px}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-size:25px;line-height:1.15;margin:0 0 6px}.sub,.muted{color:var(--muted)}.sub{margin:0 0 14px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:99px;padding:7px 10px;font-size:12px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--amber)}.dot.ok{background:var(--green)}.dot.bad{background:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}
+.card{background:rgba(20,28,47,.94);border:1px solid var(--line);border-radius:15px;padding:14px;min-width:0}
+.kicker{font-size:12px;color:var(--muted);margin-bottom:5px}.value{font-size:23px;font-weight:750;overflow-wrap:anywhere}.small{font-size:12px;color:var(--muted)}
+.section-title{font-size:17px;margin:0 0 12px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+button,select{border:1px solid #405071;background:#202c45;color:var(--text);border-radius:10px;padding:11px 13px;font:inherit;cursor:pointer}
+button.primary{background:#3159a8;border-color:#4877cf}button.danger{border-color:#7d3847;background:#3a202c}button:disabled{opacity:.45;cursor:not-allowed}
+.symbols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.symbol-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.symbol{font-weight:700;font-size:17px}.price{font-size:21px;font-weight:750;margin:8px 0}
+.signal{display:inline-block;border-radius:7px;padding:4px 7px;font-size:12px;font-weight:700;background:#28344a;color:var(--muted)}
+.signal.buy{background:#153d36;color:var(--green)}.signal.sell{background:#482530;color:var(--red)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.log{max-height:300px;overflow:auto;display:flex;flex-direction:column;gap:8px}.entry{padding:9px 10px;background:#10182a;border:1px solid #25314a;border-radius:9px;font-size:13px;overflow-wrap:anywhere}
+.entry b{color:var(--blue)}.positive{color:var(--green)}.negative{color:var(--red)}
+.statusline{display:flex;gap:8px;align-items:flex-start}.statusline .dot{flex:0 0 auto;margin-top:5px}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}
+.hidden{display:none!important}
+@media(max-width:680px){main{padding:14px 10px 30px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.symbols{grid-template-columns:1fr}.two{grid-template-columns:1fr}.value{font-size:21px}h1{font-size:23px}}
 </style>
 </head>
 <body>
-<header><div class="wrap" style="padding:0 14px"><div class="top"><div><h1>Paper Trader</h1><p>Autonomous crypto strategy · simulated money only</p></div><span class="status"><span class="dot"></span><span id="status">Starting</span></span></div></div></header>
-<main class="wrap">
-<div class="banner"><b>Paper trading only.</b> This prototype never places real orders. Keep this page open for it to monitor prices. It may pause if your phone locks, Safari suspends the tab, or the connection drops. Results are experimental, not evidence of future profit.</div>
-<section class="panel">
-<div class="top"><div><div class="muted">Selected market</div><div style="font-size:18px;font-weight:700;margin-top:5px"> <select id="symbol" aria-label="Market"><option value="BTCUSDT">Bitcoin · BTC/USDT</option><option value="ETHUSDT">Ethereum · ETH/USDT</option></select></div></div><div style="text-align:right"><div class="muted">Latest price (USDT)</div><div class="price" id="price">—</div><div class="muted" id="updated">Waiting for market data…</div></div></div>
-</section>
-<section class="metrics">
-<div class="metric"><div class="muted">Virtual equity</div><div class="v" id="equity">$10,000.00</div></div>
-<div class="metric"><div class="muted">Realized P/L</div><div class="v" id="pnl">$0.00</div></div>
-<div class="metric"><div class="muted">Win rate</div><div class="v" id="winrate">—</div></div>
-<div class="metric"><div class="muted">Max drawdown</div><div class="v" id="drawdown">0.00%</div></div>
-</section>
-<section class="panel">
-<div class="top"><div><strong>Autopilot</strong><div class="muted" style="margin-top:5px">EMA 9 / EMA 21 crossover · long or cash</div></div><span class="status" id="runBadge"><span class="dot"></span><span id="runText">Running</span></span></div>
-<div style="height:12px"></div><div class="controls"><button id="toggle">Pause bot</button><button class="secondary" id="refresh">Refresh prices</button></div>
-<div style="height:10px"></div><div class="small">Rules: 10% of equity per position; 0.1% simulated fee per side; 1% stop-loss; 2% take-profit; 3% daily loss pause. Strategy checks only when a new 1-minute candle appears. No leverage or short selling.</div>
-</section>
-<section class="metrics">
-<div class="metric"><div class="muted">Open position</div><div class="v" id="position">None</div></div>
-<div class="metric"><div class="muted">Closed trades</div><div class="v" id="trades">0</div></div>
-<div class="metric"><div class="muted">Available cash</div><div class="v" id="cash">$10,000.00</div></div>
-<div class="metric"><div class="muted">Today's P/L</div><div class="v" id="daypnl">$0.00</div></div>
-</section>
-<section class="panel"><div class="top"><strong>Trade history</strong><button class="secondary" id="reset" style="width:auto;padding:8px 12px">Reset test</button></div><div id="history" class="log" style="margin-top:10px"><div class="empty">No trades yet. The bot will wait for a signal.</div></div></section>
-<section class="panel"><strong>Activity log</strong><div id="activity" class="log" style="margin-top:10px"><div class="empty">Initializing market data…</div></div></section>
-<footer>Market data: Binance public spot candles · Virtual balances are stored in this browser on this device.</footer>
+<main>
+  <div class="top">
+    <div><h1>Private Paper Trader</h1><p class="sub">BTC + ETH · simulated money only · EMA crossover</p></div>
+    <div class="pill"><span class="dot" id="statusDot"></span><span id="runStatus">Connecting…</span></div>
+  </div>
+  <div class="card">
+    <div class="statusline"><span class="dot" id="healthDot"></span><div><b id="healthTitle">Starting safely</b><div class="small" id="healthText">Loading completed 1-minute candles. No real orders are possible from this page.</div></div></div>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="kicker">Paper equity</div><div class="value" id="equity">$10,000.00</div><div class="small" id="equityChange">Starting balance $10,000</div></div>
+    <div class="card"><div class="kicker">Realized P/L</div><div class="value" id="realized">$0.00</div><div class="small">Closed paper trades, after fees</div></div>
+    <div class="card"><div class="kicker">Open positions</div><div class="value" id="positionCount">0</div><div class="small" id="positionText">No open position</div></div>
+    <div class="card"><div class="kicker">Closed trades</div><div class="value" id="closedCount">0</div><div class="small" id="winRate">No completed trades yet</div></div>
+  </div>
+  <div class="controls">
+    <button class="primary" id="startBtn">Pause bot</button>
+    <button id="refreshBtn">Refresh prices</button>
+    <button id="testBtn">Test trade engine</button>
+    <button id="exportBtn">Export trade log</button>
+    <button class="danger" id="resetBtn">Reset paper account</button>
+  </div>
+  <div class="symbols" id="symbols">
+    <div class="card"><div class="muted">Loading BTC…</div></div>
+    <div class="card"><div class="muted">Loading ETH…</div></div>
+  </div>
+  <div class="two">
+    <section class="card"><h2 class="section-title">Risk controls</h2>
+      <table><tbody>
+        <tr><td>Position size</td><td>10% of equity maximum</td></tr>
+        <tr><td>Risk budget per trade</td><td>0.5% of equity</td></tr>
+        <tr><td>Stop-loss</td><td>1.0%</td></tr>
+        <tr><td>Take-profit</td><td>2.0%</td></tr>
+        <tr><td>Daily loss circuit breaker</td><td>2.0% from day-start equity</td></tr>
+        <tr><td>Trading fee assumption</td><td>0.1% each side</td></tr>
+        <tr><td>Concurrent positions</td><td>1 total</td></tr>
+      </tbody></table>
+      <p class="note">These are conservative example settings, not a claim that the strategy is profitable. Signals use completed candles only.</p>
+    </section>
+    <section class="card"><h2 class="section-title">Activity log</h2><div id="log" class="log"><div class="entry">Starting paper account. Waiting for market data…</div></div></section>
+  </div>
+  <section class="card" style="margin-top:10px"><h2 class="section-title">Open paper position</h2><div id="positionDetails" class="muted">No open position.</div></section>
+  <p class="note">Educational simulator only. This page does not place real trades. It runs while the page is open; iOS may suspend background tabs. Do not use real exchange keys here. Paper results do not guarantee future results.</p>
 </main>
 <script>
 (() => {
-const START=10000, FEE=0.001, POLL=30000, STORAGE='paperTraderCrypto_v1';
-let state={cash:START,position:null,closed:[],events:[],paused:false,lastCandle:0,dayKey:new Date().toISOString().slice(0,10),dayStart:START,peak:START,maxDD:0,symbol:'BTCUSDT',dailyStopped:false};
-let candles=[], busy=false;
-function load(){try{const x=JSON.parse(localStorage.getItem(STORAGE));if(x&&x.cash!==undefined)state={...state,...x};}catch(e){}}
-function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state));}catch(e){log('Could not save state in browser storage.');}}
-function fmt(n){return Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
-function money(n){return (n<0?'−':'')+'$'+fmt(Math.abs(n));}
-function log(s){state.events.unshift({time:new Date().toLocaleTimeString(),text:s});state.events=state.events.slice(0,12);renderLogs();save();}
-function ema(values,period){const k=2/(period+1);let v=values[0];for(let i=1;i<values.length;i++)v=values[i]*k+v*(1-k);return v;}
-function equity(price){return state.cash+(state.position?state.position.qty*price:0);}
-function dayPnl(price){return equity(price)-state.dayStart;}
-function render(){
- const p= candles.length?candles[candles.length-1].close:0;
- document.getElementById('price').textContent=p?'$'+fmt(p):'—';
- document.getElementById('updated').textContent=p?'Updated '+new Date().toLocaleTimeString():'Waiting for market data…';
- const eq=p?equity(p):state.cash, realized=state.closed.reduce((a,t)=>a+t.pnl,0);
- document.getElementById('equity').textContent=money(eq);
- document.getElementById('pnl').textContent=money(realized);
- document.getElementById('pnl').className='v '+(realized>=0?'green':'red');
- const wins=state.closed.filter(t=>t.pnl>0).length;
- document.getElementById('winrate').textContent=state.closed.length?Math.round(wins/state.closed.length*100)+'%':'—';
- document.getElementById('drawdown').textContent=(state.maxDD*100).toFixed(2)+'%';
- document.getElementById('position').textContent=state.position?fmt(state.position.qty)+' units':'None';
- document.getElementById('trades').textContent=state.closed.length;
- document.getElementById('cash').textContent=money(state.cash);
- const dp=p?dayPnl(p):state.cash-state.dayStart;
- document.getElementById('daypnl').textContent=money(dp);
- document.getElementById('daypnl').className='v '+(dp>=0?'green':'red');
- document.getElementById('status').textContent=busy?'Updating':(p?'Connected':'Offline');
- document.getElementById('runText').textContent=state.paused?'Paused':(state.dailyStopped?'Daily limit hit':'Running');
- document.getElementById('toggle').textContent=state.paused?'Resume bot':'Pause bot';
- document.getElementById('symbol').value=state.symbol;
- renderLogs();
+"use strict";
+const API = "https://api.binance.com/api/v3/klines";
+const SYMBOLS = ["BTCUSDT","ETHUSDT"];
+const START_BALANCE = 10000, FEE = 0.001, STOP = 0.01, TAKE = 0.02, RISK = 0.005, MAX_NOTIONAL = 0.10, DAILY_LIMIT = 0.02;
+const KEY = "privatePaperTraderV2";
+const $ = id => document.getElementById(id);
+const money = n => (Number.isFinite(n) ? n : 0).toLocaleString("en-US",{style:"currency",currency:"USD"});
+const priceFmt = n => Number.isFinite(n) ? n.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits: n<1?6:2}) : "—";
+const timeFmt = t => new Date(t).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+const fresh = () => ({cash:START_BALANCE, positions:{}, trades:[], events:[], lastProcessed:{}, dayKey:new Date().toISOString().slice(0,10), dayStartEquity:START_BALANCE, pausedForDailyLoss:false, engineRunning:true, prices:{}, signals:{}, candleTimes:{}, lastUpdated:null});
+let state = loadState();
+let busy = false;
+function loadState(){ try {const s=JSON.parse(localStorage.getItem(KEY)); if(s && typeof s.cash==="number" && s.trades && s.positions) return {...fresh(),...s};}catch(e){} return fresh();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){logEvent("Browser storage unavailable; data may not persist after closing the page.","WARN");}}
+function logEvent(message,kind="INFO"){state.events.unshift({time:Date.now(),message,kind});state.events=state.events.slice(0,100);save();renderLog();}
+function ema(values,period){const k=2/(period+1);let out=[];let e=values[0];out.push(e);for(let i=1;i<values.length;i++){e=values[i]*k+e*(1-k);out.push(e);}return out;}
+function completedRows(rows){const now=Date.now();return rows.filter(r=>Number(r[6]) < now);}
+function getSignal(rows){
+ const closes=rows.map(r=>Number(r[4]));
+ if(closes.length<30) return {signal:"WAIT",reason:"Need at least 30 completed candles"};
+ const fast=ema(closes,9), slow=ema(closes,21), n=closes.length;
+ let signal="HOLD", reason="No EMA crossover on the latest completed candle";
+ if(fast[n-2] <= slow[n-2] && fast[n-1] > slow[n-1]) {signal="BUY";reason="EMA 9 crossed above EMA 21";}
+ else if(fast[n-2] >= slow[n-2] && fast[n-1] < slow[n-1]) {signal="SELL";reason="EMA 9 crossed below EMA 21";}
+ return {signal,reason,fast:fast[n-1],slow:slow[n-1],previousFast:fast[n-2],previousSlow:slow[n-2],lastTime:Number(rows[n-1][0]),close:closes[n-1]};
 }
-function renderLogs(){
- const hist=document.getElementById('history');
- hist.innerHTML=state.closed.length?state.closed.slice(-12).reverse().map(t=>`<div class="trade"><div><strong>${t.side} ${t.symbol}</strong><span class="muted">${t.time} · entry $${fmt(t.entry)} → exit $${fmt(t.exit)}</span></div><div class="${t.pnl>=0?'green':'red'}" style="font-weight:700;white-space:nowrap">${money(t.pnl)}</div></div>`).join(''):'<div class="empty">No closed trades yet. Waiting for a signal.</div>';
- document.getElementById('activity').innerHTML=state.events.length?state.events.slice(0,8).map(e=>`<div class="trade"><div class="muted">${e.time}</div><div style="flex:1;text-align:right">${escapeHtml(e.text)}</div></div>`).join(''):'<div class="empty">No activity yet.</div>';
+function equity(){let v=state.cash;for(const [sym,p] of Object.entries(state.positions)) v += p.qty*(state.prices[sym]||p.entryPrice);return v;}
+function dailyLossHit(){const eq=equity();return state.dayStartEquity>0 && (state.dayStartEquity-eq)/state.dayStartEquity>=DAILY_LIMIT;}
+function positionSize(price){
+ const eq=equity(), riskCash=eq*RISK, stopDistance=price*STOP;
+ const byRisk=riskCash/stopDistance, byCap=(eq*MAX_NOTIONAL)/price;
+ return Math.max(0,Math.min(byRisk,byCap));
 }
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function closePosition(price,reason){
- const pos=state.position;if(!pos)return;
- const gross=pos.qty*price, fee=gross*FEE, pnl=(price-pos.entry)*pos.qty-pos.entry*pos.qty*FEE-fee;
- state.cash+=gross-fee;
- state.closed.push({side:'SELL',symbol:state.symbol,time:new Date().toLocaleString(),entry:pos.entry,exit:price,pnl,reason});
- state.position=null;log(`Closed ${state.symbol} at $${fmt(price)} (${reason}); net P/L ${money(pnl)}.`);
-}
-function openPosition(price){
- const spend=state.cash*0.10, fee=spend*FEE, qty=(spend-fee)/price;
- if(spend<10)return;
- state.cash-=spend;state.position={entry:price,qty,stop:price*0.99,target:price*1.02,opened:Date.now()};
- log(`Opened simulated ${state.symbol} position at $${fmt(price)}; position size ${money(spend)}.`);
-}
-function process(){
- if(!candles.length)return;
- const price=candles[candles.length-1].close, eq=equity(price);
- state.peak=Math.max(state.peak||START,eq);
- const dd=(state.peak-eq)/state.peak;state.maxDD=Math.max(state.maxDD||0,dd);
- const today=new Date().toISOString().slice(0,10);
- if(today!==state.dayKey){state.dayKey=today;state.dayStart=eq;state.dailyStopped=false;log('New day: daily risk limit reset.');}
- if(dayPnl(price)<=-START*0.03&&!state.dailyStopped){state.dailyStopped=true;if(state.position)closePosition(price,'daily loss limit');log('Daily loss limit reached; autopilot paused for today.');}
- if(state.position){
-   if(price<=state.position.stop)closePosition(price,'stop-loss');
-   else if(price>=state.position.target)closePosition(price,'take-profit');
- }
- const closes=candles.map(c=>c.close);
- if(closes.length<30)return;
- const recent=closes.slice(-30), prev=recent.slice(0,-1);
- const fast=ema(recent.slice(-9),9), slow=ema(recent.slice(-21),21);
- const prevFast=ema(prev.slice(-9),9), prevSlow=ema(prev.slice(-21),21);
- const buy=prevFast<=prevSlow&&fast>slow;
- const sell=prevFast>=prevSlow&&fast<slow;
- if(!state.paused&&!state.dailyStopped){
-   if(state.position&&sell)closePosition(price,'EMA bearish crossover');
-   else if(!state.position&&buy)openPosition(price);
- }
+function openPosition(sym,price,candleTime,reason){
+ if(state.positions[sym] || Object.keys(state.positions).length>0) return;
+ if(state.pausedForDailyLoss || dailyLossHit()){state.pausedForDailyLoss=true;logEvent("Daily loss limit reached. New entries paused.","RISK");return;}
+ const qty=positionSize(price), gross=qty*price, fee=gross*FEE;
+ if(qty<=0 || gross+fee>state.cash){logEvent("BUY skipped: insufficient paper cash or invalid size.","WARN");return;}
+ state.cash -= gross+fee;
+ state.positions[sym]={symbol:sym,qty,entryPrice:price,entryFee:fee,entryTime:Date.now(),entryCandle:candleTime,stopPrice:price*(1-STOP),takePrice:price*(1+TAKE)};
+ logEvent(`PAPER BUY ${sym}: ${qty.toFixed(6)} at ${priceFmt(price)}. ${reason}`);
  save();render();
 }
-async function refresh(){
- if(busy)return;busy=true;render();
- try{
-  const res=await fetch(`https://api.binance.com/api/v3/klines?symbol=${state.symbol}&interval=1m&limit=100`,{cache:'no-store'});
-  if(!res.ok)throw new Error('Market data request failed ('+res.status+').');
-  const data=await res.json();
-  candles=data.map(k=>({time:k[0],close:Number(k[4])}));
-  const latest=candles[candles.length-1];
-  if(latest.time!==state.lastCandle){state.lastCandle=latest.time;process();}
-  else render();
- }catch(e){log('Market data unavailable: '+e.message+' Try Refresh or check connection.');}
- finally{busy=false;render();}
+function closePosition(sym,price,reason){
+ const p=state.positions[sym];if(!p)return;
+ const gross=price*p.qty, exitFee=gross*FEE, proceeds=gross-exitFee;
+ const pnl=(price-p.entryPrice)*p.qty-p.entryFee-exitFee;
+ state.cash += proceeds;
+ state.trades.unshift({symbol:sym,qty:p.qty,entryPrice:p.entryPrice,exitPrice:price,pnl,entryTime:p.entryTime,exitTime:Date.now(),reason});
+ state.trades=state.trades.slice(0,500);
+ delete state.positions[sym];
+ logEvent(`PAPER SELL ${sym}: ${priceFmt(price)} · net ${pnl>=0?"+":""}${money(pnl)} · ${reason}`,pnl>=0?"TRADE":"RISK");
+ if(dailyLossHit()){state.pausedForDailyLoss=true;logEvent("Daily loss circuit breaker activated. No new entries until the next UTC day.","RISK");}
+ save();render();
 }
-document.getElementById('toggle').addEventListener('click',()=>{state.paused=!state.paused;log(state.paused?'Autopilot paused.':'Autopilot resumed.');save();render();});
-document.getElementById('refresh').addEventListener('click',refresh);
-document.getElementById('symbol').addEventListener('change',e=>{state.symbol=e.target.value;state.position=null;state.lastCandle=0;candles=[];log('Market changed to '+state.symbol+'. Existing open position cleared for this test.');save();refresh();});
-document.getElementById('reset').addEventListener('click',()=>{if(!confirm('Reset virtual balance, open position, and all trade history?'))return;state={cash:START,position:null,closed:[],events:[],paused:false,lastCandle:0,dayKey:new Date().toISOString().slice(0,10),dayStart:START,peak:START,maxDD:0,symbol:document.getElementById('symbol').value,dailyStopped:false};save();log('Paper account reset to $10,000.');refresh();});
-load();render();log('Bot initialized. Paper-only mode enabled; no real orders can be placed.');refresh();setInterval(refresh,POLL);
+function processCandle(sym,sig){
+ if(!sig.lastTime || state.lastProcessed[sym]===sig.lastTime) return;
+ state.lastProcessed[sym]=sig.lastTime;
+ const p=state.positions[sym];
+ if(p){
+   if(sig.close<=p.stopPrice) closePosition(sym,p.stopPrice,"stop-loss");
+   else if(sig.close>=p.takePrice) closePosition(sym,p.takePrice,"take-profit");
+   else if(sig.signal==="SELL") closePosition(sym,sig.close,"EMA bearish crossover");
+ } else if(sig.signal==="BUY") openPosition(sym,sig.close,sig.lastTime,sig.reason);
+ save();
+}
+async function fetchSymbol(sym){
+ const url=`${API}?symbol=${sym}&interval=1m&limit=100`;
+ const resp=await fetch(url,{cache:"no-store"});
+ if(!resp.ok) throw new Error(`${sym} API returned HTTP ${resp.status}`);
+ const rows=completedRows(await resp.json());
+ if(rows.length<30) throw new Error(`${sym}: not enough completed candles`);
+ const sig=getSignal(rows), price=Number(rows[rows.length-1][4]);
+ state.prices[sym]=price;state.signals[sym]=sig;state.candleTimes[sym]=sig.lastTime;
+ processCandle(sym,sig);
+}
+function render(){
+ $("equity").textContent=money(equity());
+ const pl=equity()-START_BALANCE; $("equityChange").textContent=`${pl>=0?"+":""}${money(pl)} since account start`;
+ $("equityChange").className="small "+(pl>=0?"positive":"negative");
+ const realized=state.trades.reduce((a,t)=>a+t.pnl,0);$("realized").textContent=(realized>=0?"+":"")+money(realized);$("realized").className="value "+(realized>=0?"positive":"negative");
+ $("positionCount").textContent=Object.keys(state.positions).length;
+ $("positionText").textContent=Object.keys(state.positions).length?Object.keys(state.positions).join(", "):"No open position";
+ $("closedCount").textContent=state.trades.length;
+ const wins=state.trades.filter(t=>t.pnl>0).length;$("winRate").textContent=state.trades.length?`${(wins/state.trades.length*100).toFixed(0)}% winning · ${wins} winners`:"No completed trades yet";
+ $("runStatus").textContent=state.engineRunning?"Paper bot running":"Bot paused";
+ $("statusDot").className="dot "+(state.engineRunning?"ok":"");
+ $("healthDot").className="dot "+(state.pausedForDailyLoss?"bad":"ok");
+ $("healthTitle").textContent=state.pausedForDailyLoss?"Daily loss limit reached":state.lastUpdated?"Market data updated":"Waiting for market data";
+ $("healthText").textContent=state.pausedForDailyLoss?"New entries are disabled until the next UTC day. Existing positions remain managed.":state.lastUpdated?`Last successful update ${timeFmt(state.lastUpdated)}. Signals use completed 1-minute candles.`:"Connect to market data to begin. This page cannot send real orders.";
+ $("symbols").innerHTML=SYMBOLS.map(sym=>{
+  const s=state.signals[sym], pos=state.positions[sym], sig=s?.signal||"WAIT";
+  const cls=sig==="BUY"?"buy":sig==="SELL"?"sell":"";
+  return `<article class="card"><div class="symbol-head"><span class="symbol">${sym==="BTCUSDT"?"Bitcoin (BTC)":"Ethereum (ETH)"}</span><span class="signal ${cls}">${sig}</span></div><div class="price">${priceFmt(state.prices[sym])}</div><div class="small">${s?escapeHtml(s.reason):"Waiting for candle data"}</div><div class="small" style="margin-top:8px">EMA 9: ${s?.fast?priceFmt(s.fast):"—"} · EMA 21: ${s?.slow?priceFmt(s.slow):"—"}</div><div class="small">Last completed candle: ${s?.lastTime?new Date(s.lastTime).toLocaleTimeString():"—"}</div><div class="small" style="margin-top:8px">${pos?`Position: ${pos.qty.toFixed(6)} · entry ${priceFmt(pos.entryPrice)}`:"No open position"}</div></article>`;
+ }).join("");
+ const posEntries=Object.entries(state.positions);
+ $("positionDetails").innerHTML=posEntries.length?posEntries.map(([sym,p])=>{const mark=state.prices[sym]||p.entryPrice;const u=(mark-p.entryPrice)*p.qty-p.entryFee-mark*p.qty*FEE;return `<div class="entry"><b>${sym}</b> · ${p.qty.toFixed(6)} units<br>Entry ${priceFmt(p.entryPrice)} · Mark ${priceFmt(mark)}<br>Stop ${priceFmt(p.stopPrice)} · Target ${priceFmt(p.takePrice)}<br>Unrealized estimate: <span class="${u>=0?"positive":"negative"}">${u>=0?"+":""}${money(u)}</span></div>`}).join(""):"No open position.";
+ renderLog();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function renderLog(){$("log").innerHTML=state.events.length?state.events.map(e=>`<div class="entry"><span class="small">${new Date(e.time).toLocaleString()}</span><br><b>${escapeHtml(e.kind)}</b> · ${escapeHtml(e.message)}</div>`).join(""):'<div class="entry">No activity yet.</div>';}
+async function tick(manual=false){
+ if(busy){if(manual)logEvent("Refresh skipped: market data request already in progress.");return;}
+ if(!state.engineRunning && !manual)return;
+ busy=true;$("refreshBtn").disabled=true;
+ try{
+   // Reset the daily risk baseline at UTC day rollover.
+   const today=new Date().toISOString().slice(0,10);
+   if(today!==state.dayKey){state.dayKey=today;state.dayStartEquity=equity();state.pausedForDailyLoss=false;logEvent("New UTC day: daily loss circuit breaker reset.");}
+   const results=await Promise.allSettled(SYMBOLS.map(fetchSymbol));
+   const errors=results.filter(r=>r.status==="rejected").map(r=>r.reason?.message||"Unknown error");
+   if(errors.length===SYMBOLS.length){$("healthTitle").textContent="Market data unavailable";$("healthText").textContent=errors.join(" · ");$("healthDot").className="dot bad";logEvent("Market data failed: "+errors.join(" | "),"ERROR");}
+   else{
+    state.lastUpdated=Date.now();
+    if(errors.length)logEvent("Partial market-data issue: "+errors.join(" | "),"WARN");
+    save();
+   }
+   render();
+ }catch(e){logEvent("Update error: "+(e.message||e),"ERROR");}
+ finally{busy=false;$("refreshBtn").disabled=false;}
+}
+function engineSelfTest(){
+ const checks=[];
+ const assert=(name,condition)=>checks.push({name,pass:!!condition});
+ const base=100;
+ const pos={symbol:"TEST",qty:1,entryPrice:100,entryFee:0.1,stopPrice:99,takePrice:102};
+ assert("Stop-loss threshold is 1% below entry",Math.abs(pos.stopPrice-99)<1e-9);
+ assert("Take-profit threshold is 2% above entry",Math.abs(pos.takePrice-102)<1e-9);
+ const feeBuy=100*FEE, feeSell=102*FEE, pnl=(102-100)-feeBuy-feeSell;
+ assert("Net P/L includes entry and exit fees",Math.abs(pnl-1.798)<1e-9);
+ const sample=[1,2,3,4,5];const e=ema(sample,3);
+ assert("EMA produces one value per candle",e.length===sample.length);
+ assert("Position sizing stays below 10% notional cap",positionSize(100)<=equity()*MAX_NOTIONAL/100+1e-8);
+ // Deterministic crossover fixture: slow trend down, then last values turn upward.
+ const falling=Array.from({length:40},(_,i)=>100-i*.5);
+ const rising=falling.slice();rising[38]=81;rising[39]=83;
+ const sig=getSignal(rising.map((c,i)=>[i*60000, c,c,c,c,1,i*60000+59000,1]));
+ assert("Signal evaluator returns a valid state",["BUY","SELL","HOLD","WAIT"].includes(sig.signal));
+ const all=checks.every(c=>c.pass);
+ logEvent(`Engine self-test ${all?"PASSED":"FAILED"}: ${checks.filter(c=>c.pass).length}/${checks.length} checks passed. This tests mechanics, not profitability.` ,all?"TEST":"ERROR");
+ alert(`Paper engine self-test ${all?"PASSED":"FAILED"}\n\n${checks.map(c=>(c.pass?"✓ ":"✗ ")+c.name).join("\n")}\n\nThis verifies basic mechanics only, not live-market profitability.`);
+}
+$("startBtn").addEventListener("click",()=>{state.engineRunning=!state.engineRunning;logEvent(state.engineRunning?"Paper bot resumed.":"Paper bot paused.");save();render();if(state.engineRunning)tick(true);$("startBtn").textContent=state.engineRunning?"Pause bot":"Resume bot";});
+$("refreshBtn").addEventListener("click",()=>tick(true));
+$("testBtn").addEventListener("click",engineSelfTest);
+$("exportBtn").addEventListener("click",()=>{const data={exportedAt:new Date().toISOString(),paperOnly:true,account:{cash:state.cash,equity:equity(),realizedPnl:state.trades.reduce((a,t)=>a+t.pnl,0)},trades:state.trades,events:state.events};const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="paper-trader-log.json";a.click();URL.revokeObjectURL(a.href);});
+$("resetBtn").addEventListener("click",()=>{if(!confirm("Reset the simulated account to $10,000 and erase local paper trades? This cannot be undone."))return;state=fresh();save();logEvent("Paper account reset to $10,000.","WARN");render();tick(true);});
+window.addEventListener("online",()=>{logEvent("Internet connection restored.");tick(true);});
+window.addEventListener("offline",()=>logEvent("Device is offline. Market updates are paused.","WARN"));
+$("startBtn").textContent=state.engineRunning?"Pause bot":"Resume bot";
+render();
+tick(true);
+setInterval(()=>tick(false),15000);
 })();
 </script>
-</body></html>
+</body>
+</html>
