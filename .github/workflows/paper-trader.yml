@@ -1,0 +1,55 @@
+name: Gold Scalper Paper Test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gold-scalper-paper-test
+  cancel-in-progress: false
+
+jobs:
+  paper-trading:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+
+    steps:
+      - name: Checkout worker branch
+        uses: actions/checkout@v4
+        with:
+          ref: gold-scalper-worker
+
+      - name: Restore paper state
+        uses: actions/cache/restore@v4
+        with:
+          path: paper_state.json
+          key: gold-paper-state-${{ github.run_id }}
+          restore-keys: |
+            gold-paper-state-
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run paper trader
+        env:
+          DRY_RUN: "true"
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TWELVE_DATA_API_KEY: ${{ secrets.TWELVE_DATA_API_KEY }}
+        run: python worker.py
+
+      - name: Save paper state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: paper_state.json
+          key: gold-paper-state-${{ github.run_id }}
