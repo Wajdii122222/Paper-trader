@@ -6,7 +6,11 @@ on:
     - cron: "*/5 * * * *"
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: gold-scalper-paper-test
+  cancel-in-progress: false
 
 jobs:
   paper-trading:
@@ -19,6 +23,14 @@ jobs:
         with:
           ref: gold-scalper-worker
 
+      - name: Restore paper trading state
+        uses: actions/cache/restore@v4
+        with:
+          path: paper_state.json
+          key: gold-paper-state-${{ github.run_id }}
+          restore-keys: |
+            gold-paper-state-
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -27,10 +39,17 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run paper trader
+      - name: Run one paper-trading check
         env:
           DRY_RUN: "true"
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TWELVE_DATA_API_KEY: ${{ secrets.TWELVE_DATA_API_KEY }}
         run: python worker.py
+
+      - name: Save paper trading state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: paper_state.json
+          key: gold-paper-state-${{ github.run_id }}
